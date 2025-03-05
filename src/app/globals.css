@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+.PanelFields input {
+  background: #fff;
+  height: 34px;
+  border-color: #d3d1ce;
+  /* margin-bottom: 0.5rem; */
+}
+.PanelFields input:focus-visible, .PanelFields select:focus-visible {
+  outline: #333;
+}
+.PanelFields select {
+  background: #fff;
+  height: 34px;
+  border-color: #d3d1ce;
+  /* margin-bottom: 0.5rem; */
+  padding: 0 .2rem;
+}
+.gridLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 10px;
+}
+
+.fieldLabel {
+  /* font-size: 13px; */
+  color: #333;
+  font-weight: 600;
+  font-family: "Assistant";
+}
+
+.PanelHeading{
+    position: sticky;
+    width: 100%;
+    top: 0;
+}
+
+.required-label::after {
+    content: " *";
+    color: #da1d1d;
+  }
