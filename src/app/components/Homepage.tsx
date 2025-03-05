@@ -24,6 +24,7 @@ const stockData: any = [
 ];
 const Homepage = () => {
   const [showPanel, setShowPanel] = useState(false);
+  const [showSellPanel, setshowSellPanel] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [method, setmethod] = useState("Save");
   const [objectId, setObjectId] = useState("");
@@ -64,7 +65,7 @@ const Homepage = () => {
   }
 
   function SellProduct(id:any, data:any){
-    setShowPanel(true);
+    setshowSellPanel(true);
     setmethod("sold");
     setObjectId(id);
     setData(data);
@@ -173,7 +174,7 @@ const Homepage = () => {
       
       <AddProduct showPanel={showPanel} setShowPanel={setShowPanel} method={method} objectId={objectId} setData={setData} Data={Data}/>
      
-      <SellItems showPanel={showPanel} setShowPanel={setShowPanel} method={method} objectId={objectId} setData={setData} Data={Data}/>
+      <SellItems showPanel={setshowSellPanel} setShowPanel={setshowSellPanel} method={method} objectId={objectId} setData={setData} Data={Data}/>
     </div>
   );
 };
