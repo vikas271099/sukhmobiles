@@ -174,7 +174,7 @@ const Homepage = () => {
       
       <AddProduct showPanel={showPanel} setShowPanel={setShowPanel} method={method} objectId={objectId} setData={setData} Data={Data}/>
      
-      <SellItems showPanel={setshowSellPanel} setShowPanel={setshowSellPanel} method={method} objectId={objectId} setData={setData} Data={Data}/>
+      <SellItems showPanel={showSellPanel} setShowPanel={setshowSellPanel} method={method} objectId={objectId} setData={setData} Data={Data}/>
     </div>
   );
 };
