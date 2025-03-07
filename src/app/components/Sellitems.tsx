@@ -43,7 +43,7 @@ function SellItems(props: any) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({...props?.Data, GUID:generateGUID()}),
+        body: JSON.stringify({...props?.Data, quantity:"1", GUID:generateGUID()}),
       });
 
       if (!response.ok) {
