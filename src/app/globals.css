@@ -39,3 +39,22 @@
     content: " *";
     color: #da1d1d;
   }
+
+
+  @media all and (max-width:768px) {
+    .headerSearch{
+      display: block;
+    }
+    .width100p{
+      width: 100%;
+    }
+    .width60p{
+      width: 60%;
+    }
+    .headerStyles{
+      position: sticky;
+      top: 0;
+      right: 0;
+      width: 100%;
+    }
+  }

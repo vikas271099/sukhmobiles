@@ -75,10 +75,10 @@ const Homepage = () => {
     <div>
       <main>
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between headerSearch">
             <div className="mb-4 text-lg font-semibold">Current Stock</div>
 
-            <div className="flex items-center w-[40%] gap-[10px]">
+            <div className="flex items-center w-[40%] gap-[10px] width100p" >
               {/* Search Bar */}
               <input
                 type="text"
@@ -89,7 +89,7 @@ const Homepage = () => {
               />
               <button
                 onClick={() => openAddPanel("Save", "", "")}
-                className="cursor-pointer mb-4 w-1/2 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900"
+                className="width60p cursor-pointer mb-4 w-1/2 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900"
               >
                 Add a Product
               </button>
