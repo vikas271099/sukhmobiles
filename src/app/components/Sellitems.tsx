@@ -2,9 +2,17 @@
 import React from "react";
 import { X } from "lucide-react";
 import { SellFields, queryfields } from "../../../constants";
+import { SweetAlerts } from "./common/sweetAlert";
+
 
 let allErrors: any = {};
 function SellItems(props: any) {
+  const { SweetAlert: SweetAlert } = SweetAlerts(
+    "#sellitems"
+  );
+  const [ButtonText, setButtonText] = React.useState("Save");
+  const [loading, setLoader] = React.useState(false);
+
   function handleOnchange(e: any) {
     props?.setData({ ...props?.Data, [e.target.name]: e.target.value });
     // Clear error message when user starts typing
@@ -13,9 +21,12 @@ function SellItems(props: any) {
 
   const validateFields = () => {
     let newErrors: any = {};
-    if (!props?.Data?.productName) newErrors.productName = "Product Name is required";
-    if (!props?.Data?.customerName) newErrors.customerName = "Customer Name is required";
-    if (!props?.Data?.paidAmount) newErrors.paidAmount = "Paid Amount is required";
+    if (!props?.Data?.productName)
+      newErrors.productName = "Product Name is required";
+    if (!props?.Data?.customerName)
+      newErrors.customerName = "Customer Name is required";
+    if (!props?.Data?.paidAmount)
+      newErrors.paidAmount = "Paid Amount is required";
 
     setErrors(newErrors);
     allErrors = newErrors;
@@ -23,17 +34,25 @@ function SellItems(props: any) {
   };
 
   function generateGUID() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0;
-      const v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
-  
-  
+
   const SellProduct = async (e: any) => {
+  
+    setLoader(true);
+    setButtonText("");
+    delete props?.Data._id;
     e.preventDefault();
     if (!validateFields()) {
+      setLoader(false);
+      setButtonText("Save");
       return;
     }
 
@@ -43,17 +62,27 @@ function SellItems(props: any) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({...props?.Data, quantity:"1", GUID:generateGUID()}),
+        body: JSON.stringify({
+          ...props?.Data,
+          quantity: "1",
+          GUID: generateGUID(),
+        }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to add product");
       }
-      await UpdateProduct(e)
-      props.setShowPanel(false);
-      props?.setData(queryfields);
+      await UpdateProduct(e);
+      SweetAlert("success", "Item Updated Successfully!");
+      setLoader(false);
+      setButtonText("Save");
+      props.getData();
       setErrors({});
       allErrors = {};
+      setTimeout(()=>{
+        props.setShowPanel(false);
+      },2500)
+   
     } catch {
       (error: any) => {
         console.log(error);
@@ -74,16 +103,17 @@ function SellItems(props: any) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({_id: props.objectId, quantity:finalQuantity}),
+        body: JSON.stringify({ _id: props.objectId, quantity: finalQuantity }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to add product");
       }
-    //   props.setShowPanel(false);
-    //   props?.setData(queryfields);
-    //   setErrors({});
-    //   allErrors = {};
+      //   props.setShowPanel(false);
+      //   props?.setData(queryfields);
+      //   setErrors({});
+      //   allErrors = {};
+      
     } catch {
       (error: any) => {
         console.log(error);
@@ -94,7 +124,7 @@ function SellItems(props: any) {
   const [errors, setErrors] = React.useState<any>();
 
   return (
-    <div>
+    <div >
       {/* Panel code */}
       {props.showPanel && (
         <>
@@ -104,11 +134,11 @@ function SellItems(props: any) {
             onClick={() => props.setShowPanel(false)}
           ></div>
 
-          <div className="fixed top-0 right-0 h-full w-96 bg-[#f5f5f5] transition-transform transform translate-x-0 overflow-y-auto border-l">
-            <div className="bg-[#f5f5f5] rounded">
+          <div id="sellitems" className="fixed top-0 right-0 h-full w-96 bg-[#f5f5f5] transition-transform transform translate-x-0 overflow-y-auto border-l">
+            <div className="bg-[#f5f5f5] rounded" >
               <div className="flex PanelHeading justify-between items-center p-4 bg-gray-800">
                 <h2 className="text-lg font-semibold text-white">
-                 {props?.Data?.productName}
+                  {props?.Data?.productName}
                 </h2>
                 <button
                   onClick={() => props.setShowPanel(false)}
@@ -132,8 +162,14 @@ function SellItems(props: any) {
                             {item.displayName}
                           </label>
                           <input
-                            disabled = {item.name == "quantity" || item.name == "price"}
-                            value={item.name == "quantity" ? "1" : props.Data?.[item.name] }
+                            disabled={
+                              item.name == "quantity" || item.name == "price"
+                            }
+                            value={
+                              item.name == "quantity"
+                                ? "1"
+                                : props.Data?.[item.name]
+                            }
                             type={item.type}
                             name={item.name}
                             placeholder={item.placeholder}
@@ -184,12 +220,20 @@ function SellItems(props: any) {
                 </div>
               )}
 
-              <div className="flex justify-center items-center mb-4">
+              <div className="flex items-center mb-4 p-4" style={{paddingTop:0}}>
                 <button
                   onClick={SellProduct}
+                  disabled={loading}
                   className="px-4 py-1.5 w-25 bg-gray-800 mr-2 text-white rounded hover:bg-gray-900 cursor-pointer"
                 >
-                  {"Sell"}
+                {ButtonText}
+                {loading && (
+                  <div className={"elementToFadeInAndOut"}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                )}
                 </button>
                 <button
                   onClick={() => props.setShowPanel(false)}

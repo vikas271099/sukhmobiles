@@ -14,9 +14,9 @@ export async function GET(request) {
 
     // Query for a movie that has the title 'Back to the Future'
     const query = {};
-    const solditems = await Inventory.find({}).sort({ _id: -1 }).toArray();;
-    console.log(solditems);
-    return NextResponse.json({ success:true, solditems });
+    const products = await Inventory.find({}).sort({ _id: -1 }).toArray();;
+    console.log(products);
+    return NextResponse.json({ success:true, products });
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
@@ -34,8 +34,8 @@ export async function POST(request) {
   try {
     const database = client.db("SukhInventoryStock");
     const Inventory = database.collection("solditems");
-    const solditems = await Inventory.insertOne(body);
-    return NextResponse.json({ solditems, ok: true });
+    const product = await Inventory.insertOne(body);
+    return NextResponse.json({ product, ok: true });
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();

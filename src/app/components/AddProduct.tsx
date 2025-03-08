@@ -2,9 +2,18 @@
 import React from "react";
 import { X } from "lucide-react";
 import { AddFields, queryfields } from "../../../constants";
+import { SweetAlerts } from "./common/sweetAlert";
 
 let allErrors: any = {};
 function AddProduct(props: any) {
+  const [ButtonText, setButtonText] = React.useState(
+    props.method == "update" ? "Update" : "Save"
+  );
+    const { SweetAlert: SweetAlert } = SweetAlerts(
+      "#Additems"
+    );
+  const [loading, setLoader] = React.useState(false);
+  const [errors, setErrors] = React.useState<any>();
   function handleOnchange(e: any) {
     props?.setData({ ...props?.Data, [e.target.name]: e.target.value });
     // Clear error message when user starts typing
@@ -28,19 +37,26 @@ function AddProduct(props: any) {
   };
 
   function generateGUID() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0;
-      const v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
-  
-  
+
   const SaveProduct = async (e: any) => {
+    setLoader(true);
+    setButtonText("");
     e.preventDefault();
     if (!validateFields()) {
+      setLoader(false);
+      setButtonText("Save");
       return;
     }
+
 
     try {
       const response = await fetch("/api/products", {
@@ -48,17 +64,22 @@ function AddProduct(props: any) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({...props?.Data, GUID:generateGUID()}),
+        body: JSON.stringify({ ...props?.Data, GUID: generateGUID() }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to add product");
       }
-      alert("Product added successfully!");
-      props.setShowPanel(false);
-      props?.setData(queryfields);
+      SweetAlert("success", "Item Saved Successfully!");
+      setLoader(false);
+      setButtonText("Save");
+      props.getData();
       setErrors({});
       allErrors = {};
+      // props?.setData(queryfields);
+      setTimeout(()=>{
+        props.setShowPanel(false);
+      },2500)
     } catch {
       (error: any) => {
         console.log(error);
@@ -67,8 +88,12 @@ function AddProduct(props: any) {
   };
 
   const UpdateProduct = async (e: any) => {
+    setLoader(true);
+    setButtonText("");
     e.preventDefault();
     if (!validateFields()) {
+      setLoader(false);
+      setButtonText("Updated");
       return;
     }
 
@@ -78,17 +103,23 @@ function AddProduct(props: any) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({...props?.Data, _id: props.objectId}),
+        body: JSON.stringify({ ...props?.Data, _id: props.objectId }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to add product");
       }
-      alert("Product updated successfully!");
-      props.setShowPanel(false);
-      props?.setData(queryfields);
+      SweetAlert("success", "Item Updated Successfully!");
+      setLoader(false);
+      setButtonText("Update");
+      props.getData();
       setErrors({});
       allErrors = {};
+      // props?.setData(queryfields);
+      setTimeout(()=>{
+        props.setShowPanel(false);
+      },2500)
+    
     } catch {
       (error: any) => {
         console.log(error);
@@ -96,7 +127,7 @@ function AddProduct(props: any) {
     }
   };
 
-  const [errors, setErrors] = React.useState<any>();
+ 
 
   return (
     <div>
@@ -110,7 +141,7 @@ function AddProduct(props: any) {
           ></div>
 
           <div className="fixed top-0 right-0 h-full w-96 bg-[#f5f5f5] transition-transform transform translate-x-0 overflow-y-auto border-l">
-            <div className="bg-[#f5f5f5] rounded">
+            <div className="bg-[#f5f5f5] rounded" id="Additems">
               <div className="flex PanelHeading justify-between items-center p-4 bg-gray-800">
                 <h2 className="text-lg font-semibold text-white">
                   Add New Product
@@ -188,14 +219,21 @@ function AddProduct(props: any) {
                 </div>
               )}
 
-              <div className="flex justify-center items-center mb-4">
+              <div className="flex items-center mb-4 p-4" style={{paddingTop:0}}>
                 <button
                   onClick={
                     props.method == "update" ? UpdateProduct : SaveProduct
                   }
                   className="px-4 py-1.5 w-25 bg-gray-800 mr-2 text-white rounded hover:bg-gray-900 cursor-pointer"
                 >
-                  {props.method == "update" ? "Update" : "Save"}
+                  {ButtonText}
+                  {loading && (
+                    <div className={"elementToFadeInAndOut"}>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  )}
                 </button>
                 <button
                   onClick={() => props.setShowPanel(false)}

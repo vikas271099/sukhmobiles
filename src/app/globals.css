@@ -6,7 +6,8 @@
   border-color: #d3d1ce;
   /* margin-bottom: 0.5rem; */
 }
-.PanelFields input:focus-visible, .PanelFields select:focus-visible {
+.PanelFields input:focus-visible,
+.PanelFields select:focus-visible {
   outline: #333;
 }
 .PanelFields select {
@@ -14,7 +15,7 @@
   height: 34px;
   border-color: #d3d1ce;
   /* margin-bottom: 0.5rem; */
-  padding: 0 .2rem;
+  padding: 0 0.2rem;
 }
 .gridLayout {
   display: grid;
@@ -29,32 +30,58 @@
   font-family: "Assistant";
 }
 
-.PanelHeading{
-    position: sticky;
-    width: 100%;
-    top: 0;
+.PanelHeading {
+  position: sticky;
+  width: 100%;
+  top: 0;
 }
 
 .required-label::after {
-    content: " *";
-    color: #da1d1d;
-  }
+  content: " *";
+  color: #da1d1d;
+}
 
+.elementToFadeInAndOut {
+  -webkit-animation: fadeinout 2s linear forwards infinite;
+  animation: fadeinout 2s linear forwards infinite;
+  opacity: 0;
+}
 
-  @media all and (max-width:768px) {
-    .headerSearch{
-      display: block;
-    }
-    .width100p{
-      width: 100%;
-    }
-    .width60p{
-      width: 60%;
-    }
-    .headerStyles{
-      position: sticky;
-      top: 0;
-      right: 0;
-      width: 100%;
-    }
+.elementToFadeInAndOut div {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  display: inline-block;
+  margin-right: 2px;
+  border-radius: 50%;
+}
+
+@-webkit-keyframes fadeinout {
+  50% {
+    opacity: 1;
   }
+}
+
+@keyframes fadeinout {
+  50% {
+    opacity: 1;
+  }
+}
+
+@media all and (max-width: 768px) {
+  .headerSearch {
+    display: block;
+  }
+  .width100p {
+    width: 100%;
+  }
+  .width60p {
+    width: 60%;
+  }
+  .headerStyles {
+    position: sticky;
+    top: 0;
+    right: 0;
+    width: 100%;
+  }
+}
