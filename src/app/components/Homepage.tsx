@@ -5,6 +5,7 @@ import AddProduct from "./AddProduct";
 import {Pencil,Trash2,ShoppingCart } from "lucide-react";
 import { queryfields } from "../../../constants";
 import SellItems from "./Sellitems";
+import { SweetAlerts } from "./common/sweetAlert";
 const stockData: any = [
   //  { productName: "",
   //   category: "",
@@ -22,7 +23,7 @@ const stockData: any = [
   //   paymentMode: "",
   //   remarks: ""}
 ];
-const Homepage = () => {
+const Homepage = (props:any) => {
   const [showPanel, setShowPanel] = useState(false);
   const [showSellPanel, setshowSellPanel] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,14 +32,33 @@ const Homepage = () => {
   const [Data, setData] = React.useState(queryfields);
   const [isLoading, setisLoading] = useState(true);
   const [allData, setAllData] = useState(stockData);
+  const { SweetAlert: SweetAlert } = SweetAlerts(
+    "#homepage"
+  );
 
   React.useEffect(() => {
-    getData();
+    {props.Items == "sold" ?
+      getSoldData() : getData()}
   }, [showPanel]);
 
   async function getData() {
     try {
       const response = await fetch("/api/products");
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await response.json();
+
+      setAllData(data.products);
+      console.log(data.products);
+      setisLoading(false);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }
+  async function getSoldData() {
+    try {
+      const response = await fetch("/api/solditems");
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
@@ -65,18 +85,22 @@ const Homepage = () => {
   }
 
   function SellProduct(id:any, data:any){
-    setshowSellPanel(true);
-    setmethod("sold");
-    setObjectId(id);
-    setData(data);
+    if(parseInt(data.quantity)>0){
+      setshowSellPanel(true);
+      setmethod("sold");
+      setObjectId(id);
+      setData(data);
+    }else{
+      SweetAlert("info", "Item Out of stock!");
+    }
   }
 
   return (
     <div>
-      <main>
+      <main id="homepage">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between headerSearch">
-            <div className="mb-4 text-lg font-semibold">Current Stock</div>
+            <div className="mb-4 text-lg font-semibold">{props.Items == "sold" ? "Sold Items" : "Current Stock"}</div>
 
             <div className="flex items-center w-[40%] gap-[10px] width100p" >
               {/* Search Bar */}

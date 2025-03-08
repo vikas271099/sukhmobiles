@@ -6,6 +6,11 @@ import { SweetAlerts } from "./common/sweetAlert";
 
 let allErrors: any = {};
 function AddProduct(props: any) {
+
+  React.useEffect(()=>{
+    setErrors({});
+    allErrors = {};
+  },[props.showPanel])
   const [ButtonText, setButtonText] = React.useState(
     props.method == "update" ? "Update" : "Save"
   );

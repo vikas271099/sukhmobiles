@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import React, { useState } from "react";
+import Link from "next/link";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -19,15 +20,20 @@ const Header = () => {
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                  {["Home", "Products", "Dashboard", "Calendar", "Reports"].map(
+                {[
+                    { name: "Home", path: "/" },
+                    { name: "Sold Products", path: "/soldproducts" },
+                    { name: "Dashboard", path: "/dashboard" },
+                    { name: "Calendar", path: "/calendar" },
+                    { name: "Reports", path: "/reports" },
+                  ].map(
                     (item, index) => (
-                      <a
-                        key={index}
-                        href="#"
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item}
-                      </a>
+                      <Link key={index} href={item.path}>
+                      <span className="cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                        {item.name}
+                      </span>
+                    </Link>
+
                     )
                   )}
                 </div>
@@ -87,7 +93,11 @@ const Header = () => {
                     stroke="currentColor"
                     aria-hidden="true"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 ) : (
                   <svg
@@ -98,7 +108,11 @@ const Header = () => {
                     stroke="currentColor"
                     aria-hidden="true"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                    />
                   </svg>
                 )}
               </button>
@@ -110,18 +124,22 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-              {["Home", "Products", "Dashboard", "Calendar", "Reports"].map(
-                (item, index) => (
-                  <a
+              {[
+                { name: "Home", path: "/" },
+                { name: "Sold Products", path: "/soldproducts" },
+                { name: "Dashboard", path: "/dashboard" },
+                { name: "Calendar", path: "/calendar" },
+                { name: "Reports", path: "/reports" },
+              ].map((item, index) => (
+                <a
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    key={index}
-                    href="#"
-                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    {item}
-                  </a>
-                )
-              )}
+                  key={index}
+                  href="#"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                >
+                  {item.name}
+                </a>
+              ))}
             </div>
             <div className="border-t border-gray-700 pt-4 pb-3">
               <div className="flex items-center px-5">
@@ -131,8 +149,12 @@ const Header = () => {
                   alt=""
                 />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-white">Tom Cook</div>
-                  <div className="text-sm font-medium text-gray-400">tom@example.com</div>
+                  <div className="text-base font-medium text-white">
+                    Tom Cook
+                  </div>
+                  <div className="text-sm font-medium text-gray-400">
+                    tom@example.com
+                  </div>
                 </div>
               </div>
               <div className="mt-3 space-y-1 px-2">

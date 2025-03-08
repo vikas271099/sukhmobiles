@@ -4,12 +4,14 @@ import { X } from "lucide-react";
 import { SellFields, queryfields } from "../../../constants";
 import { SweetAlerts } from "./common/sweetAlert";
 
-
 let allErrors: any = {};
 function SellItems(props: any) {
-  const { SweetAlert: SweetAlert } = SweetAlerts(
-    "#sellitems"
-  );
+  React.useEffect(() => {
+    setErrors({});
+    allErrors = {};
+  }, [props.showSellPanel]);
+
+  const { SweetAlert: SweetAlert } = SweetAlerts("#sellitems");
   const [ButtonText, setButtonText] = React.useState("Save");
   const [loading, setLoader] = React.useState(false);
 
@@ -45,7 +47,6 @@ function SellItems(props: any) {
   }
 
   const SellProduct = async (e: any) => {
-  
     setLoader(true);
     setButtonText("");
     delete props?.Data._id;
@@ -79,10 +80,9 @@ function SellItems(props: any) {
       props.getData();
       setErrors({});
       allErrors = {};
-      setTimeout(()=>{
+      setTimeout(() => {
         props.setShowPanel(false);
-      },2500)
-   
+      }, 2500);
     } catch {
       (error: any) => {
         console.log(error);
@@ -113,7 +113,6 @@ function SellItems(props: any) {
       //   props?.setData(queryfields);
       //   setErrors({});
       //   allErrors = {};
-      
     } catch {
       (error: any) => {
         console.log(error);
@@ -124,7 +123,7 @@ function SellItems(props: any) {
   const [errors, setErrors] = React.useState<any>();
 
   return (
-    <div >
+    <div>
       {/* Panel code */}
       {props.showPanel && (
         <>
@@ -134,8 +133,11 @@ function SellItems(props: any) {
             onClick={() => props.setShowPanel(false)}
           ></div>
 
-          <div id="sellitems" className="fixed top-0 right-0 h-full w-96 bg-[#f5f5f5] transition-transform transform translate-x-0 overflow-y-auto border-l">
-            <div className="bg-[#f5f5f5] rounded" >
+          <div
+            id="sellitems"
+            className="fixed top-0 right-0 h-full w-96 bg-[#f5f5f5] transition-transform transform translate-x-0 overflow-y-auto border-l"
+          >
+            <div className="bg-[#f5f5f5] rounded">
               <div className="flex PanelHeading justify-between items-center p-4 bg-gray-800">
                 <h2 className="text-lg font-semibold text-white">
                   {props?.Data?.productName}
@@ -220,20 +222,23 @@ function SellItems(props: any) {
                 </div>
               )}
 
-              <div className="flex items-center mb-4 p-4" style={{paddingTop:0}}>
+              <div
+                className="flex items-center mb-4 p-4"
+                style={{ paddingTop: 0 }}
+              >
                 <button
                   onClick={SellProduct}
                   disabled={loading}
                   className="px-4 py-1.5 w-25 bg-gray-800 mr-2 text-white rounded hover:bg-gray-900 cursor-pointer"
                 >
-                {ButtonText}
-                {loading && (
-                  <div className={"elementToFadeInAndOut"}>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                )}
+                  {ButtonText}
+                  {loading && (
+                    <div className={"elementToFadeInAndOut"}>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  )}
                 </button>
                 <button
                   onClick={() => props.setShowPanel(false)}
